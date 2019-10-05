@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!--<script type="text/javascript" src="background.js"></script>
+	<script type="text/javascript" src="actions.js"></script>-->
+</head>
+<body style="min-width: 300px">
+	<button id="newgroup" style="width: 100px">Create new group</button>
+	<ul id="groups_list" style="list-style-type: none;"></ul>
+	<div id="groupcreation" style="display:none;">
+		<div id="groupcreationheader" style="display:flex" width="100%">
+			<input type="text" id="groupname" placeholder="Group name">
+			<input type="button" id="savegroup" value="Save group">
+			<input type="button" id="cancelgroup" value="Cancel">
+		</div>
+		<ul id="tabs_list" style="list-style-type: none;"></ul>
+	</div>
+	
+
+	<!--This script assigns the handlers for the controls, and needs to be loaded at the end
+	so the control elements exist when it searches for them-->
+	<script type="text/javascript" src="actions.js"></script>
+
+</body>
+</html>
