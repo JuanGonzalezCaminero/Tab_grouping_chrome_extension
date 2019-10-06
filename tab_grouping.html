@@ -4,8 +4,10 @@
 	<title></title>
 	<!--<script type="text/javascript" src="background.js"></script>
 	<script type="text/javascript" src="actions.js"></script>-->
+	<link rel="stylesheet" type="text/css" href="tab_grouping.css">
+
 </head>
-<body style="min-width: 300px">
+<body style="/*min-width: 300px*/ width: 400px">
 	<button id="newgroup" style="width: 100px">Create new group</button>
 	<ul id="groups_list" style="list-style-type: none;"></ul>
 	<div id="groupcreation" style="display:none;">
@@ -14,6 +16,7 @@
 			<input type="button" id="savegroup" value="Save group">
 			<input type="button" id="cancelgroup" value="Cancel">
 		</div>
+		<p id="groupnamealert" style="color:red; display:none"></p>
 		<ul id="tabs_list" style="list-style-type: none;"></ul>
 	</div>
 	

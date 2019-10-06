@@ -53,20 +53,50 @@ function buildGroupsList(){
 			//controls
 			var newnode  = document.createElement("li");
 			var groupname = document.createElement("p");
+			var controlsdiv = document.createElement("div");
 			var showgroupbutton = document.createElement("button");
+			var launchgroupbutton = document.createElement("button");
+			var deletegroupbutton = document.createElement("button");
 
 			groupname.innerHTML = element.name;
 
-			newnode.style.display = "grid";
+			newnode.style.display = "flex";
 			//1/3 means it will take columns 1 and 2
+			/*
 			groupname.style.gridColumn = 1/3;
 			groupname.style.gridRow = 1;
 			showgroupbutton.style.gridColumn = 3;
 			showgroupbutton.style.gridRow = 1;
+			launchgroupbutton.style.gridColumn = 4;
+			launchgroupbutton.style.gridRow = 1;
+			deletegroupbutton.style.gridColumn = 5;
+			deletegroupbutton.style.gridRow = 1;
+			*/
+			showgroupbutton.classList.add("groupbutton");
+			launchgroupbutton.classList.add("groupbutton");
+			deletegroupbutton.classList.add("groupbutton");
+
+			showgroupbutton.id = "groupshow_" + element.name;
+			showgroupbutton.innerHTML = "Show";
+
+			launchgroupbutton.innerHTML = "Open";
+
+			deletegroupbutton.innerHTML = "Delete";
+
+			controlsdiv.appendChild(showgroupbutton);
+			controlsdiv.appendChild(launchgroupbutton);
+			controlsdiv.appendChild(deletegroupbutton);
+
+			controlsdiv.classList.add("groupcontrols");
+
 			newnode.appendChild(groupname);
-			newnode.appendChild(showgroupbutton);
+			newnode.appendChild(controlsdiv);
 
 			showgroupbutton.onclick = function(){showGroup(element.name, element.tabs)};
+
+			launchgroupbutton.onclick = function(){launchGroup(element.tabs)};
+
+			deletegroupbutton.onclick = function(){deleteGroup(element.name)};
 
 			groups_list.appendChild(newnode);
 
@@ -74,9 +104,43 @@ function buildGroupsList(){
 			//button is pressed
 			var newnode  = document.createElement("li");
 			newnode.id = "group_" + element.name;
+
 			groups_list.appendChild(newnode);
 		});
 	});
+}
+
+function deleteGroup(name){
+	//Removes the group from the synced storage
+	chrome.storage.sync.get('groups', function(result) {
+	  var newGroups = [];
+	  result.groups.forEach(function(element){
+	  	if(element.name != name){
+	  		newGroups.push(element);
+	  	}
+	  });
+      chrome.storage.sync.set({groups: newGroups}, function(){
+      	//Empty and reload the groups list once the new groups have been saved
+		var groups_list = document.getElementById("groups_list");
+
+		while( groups_list.firstChild ){
+		  groups_list.removeChild( groups_list.firstChild );
+		}
+
+		buildGroupsList();
+
+		//Close the group creation menu
+		cancelGroup();
+      });
+    });
+
+}
+
+function launchGroup(tabs){
+	//Opens a new tab for each element in the group
+	tabs.forEach(function(element){
+		chrome.tabs.create({url: element.url});
+	});	
 }
 
 function showGroup(name, tabs){
@@ -113,6 +177,23 @@ function showGroup(name, tabs){
 		groupcontents.appendChild(newnode);
 	});
 	document.getElementById("group_" + name).appendChild(groupcontents);
+
+	//Change the handler associated to the button, so the next press closes the group
+	showgroupbutton = document.getElementById("groupshow_" + name);
+	showgroupbutton.onclick = function(){hideGroup(name, tabs)};
+	showgroupbutton.innerHTML = "Hide";
+}
+
+function hideGroup(name, tabs){
+	//Remove all tabs from the list
+	var tabs_list = document.getElementById("group_" + name);
+	while( tabs_list.firstChild ){
+	  tabs_list.removeChild( tabs_list.firstChild );
+	}
+	//Change the handler associated to the button, so the next press shows the group
+	showgroupbutton = document.getElementById("groupshow_" + name);
+	showgroupbutton.onclick = function(){showGroup(name, tabs)};
+	showgroupbutton.innerHTML = "Show";
 }
 
 function cancelGroup(){
@@ -123,6 +204,15 @@ function cancelGroup(){
 	while( tabs_list.firstChild ){
 	  tabs_list.removeChild( tabs_list.firstChild );
 	}
+
+	//Hide the alert if it's present
+	var groupnamealert = document.getElementById("groupnamealert");
+	groupnamealert.style.display="none";
+
+	//Empty the text input for the group name
+	var groupname = document.getElementById("groupname");
+	groupname.value = "";
+
 }
 
 function saveGroup(){
@@ -131,7 +221,23 @@ function saveGroup(){
 	var tabs_list = document.getElementById("tabs_list");
 	var groupname = document.getElementById("groupname");
 
-	group.setName(groupname.value);
+	//If the groupname text input is empty, show an alert and don't save the group
+	if(groupname.value.trim() == ""){
+		var groupnamealert = document.getElementById("groupnamealert");
+		groupnamealert.innerHTML = "* This field can't be empty";
+		groupnamealert.style.display="block";
+		return;
+	};
+
+	//If the groupname text input is duplicated, show an alert and don't save the group
+	if(document.getElementById("group_" + groupname.value.trim()) != null){
+		var groupnamealert = document.getElementById("groupnamealert");
+		groupnamealert.innerHTML = "* That name already exists";
+		groupnamealert.style.display="block";
+		return;
+	};
+
+	group.setName(groupname.value.trim());
 
 	tabs_list.childNodes.forEach(function(element){
 		if(element.dataset.selected == "1"){
