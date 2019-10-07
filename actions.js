@@ -54,9 +54,9 @@ function buildGroupsList(){
 			var newnode  = document.createElement("li");
 			var groupname = document.createElement("p");
 			var controlsdiv = document.createElement("div");
-			var showgroupbutton = document.createElement("button");
-			var launchgroupbutton = document.createElement("button");
-			var deletegroupbutton = document.createElement("button");
+			var showgroupbutton = document.createElement("input");
+			var launchgroupbutton = document.createElement("input");
+			var deletegroupbutton = document.createElement("input");
 
 			groupname.innerHTML = element.name;
 
@@ -72,16 +72,25 @@ function buildGroupsList(){
 			deletegroupbutton.style.gridColumn = 5;
 			deletegroupbutton.style.gridRow = 1;
 			*/
+			showgroupbutton.type = "image";
+			launchgroupbutton.type = "image";
+			deletegroupbutton.type = "image";
+
+			showgroupbutton.src = "/assets/icons/expand_more.png";
+			launchgroupbutton.src = "/assets/icons/arrow_upward.png";
+			deletegroupbutton.src = "/assets/icons/clear.png";
+
 			showgroupbutton.classList.add("groupbutton");
 			launchgroupbutton.classList.add("groupbutton");
 			deletegroupbutton.classList.add("groupbutton");
 
 			showgroupbutton.id = "groupshow_" + element.name;
-			showgroupbutton.innerHTML = "Show";
+			
+			//showgroupbutton.value = "Show";
 
-			launchgroupbutton.innerHTML = "Open";
+			//launchgroupbutton.value = "Open";
 
-			deletegroupbutton.innerHTML = "Delete";
+			//deletegroupbutton.value = "Delete";
 
 			controlsdiv.appendChild(showgroupbutton);
 			controlsdiv.appendChild(launchgroupbutton);
@@ -97,6 +106,8 @@ function buildGroupsList(){
 			launchgroupbutton.onclick = function(){launchGroup(element.tabs)};
 
 			deletegroupbutton.onclick = function(){deleteGroup(element.name)};
+
+			newnode.classList.add("groupheader");
 
 			groups_list.appendChild(newnode);
 
@@ -181,7 +192,7 @@ function showGroup(name, tabs){
 	//Change the handler associated to the button, so the next press closes the group
 	showgroupbutton = document.getElementById("groupshow_" + name);
 	showgroupbutton.onclick = function(){hideGroup(name, tabs)};
-	showgroupbutton.innerHTML = "Hide";
+	showgroupbutton.src = "/assets/icons/expand_less.png";
 }
 
 function hideGroup(name, tabs){
@@ -193,7 +204,7 @@ function hideGroup(name, tabs){
 	//Change the handler associated to the button, so the next press shows the group
 	showgroupbutton = document.getElementById("groupshow_" + name);
 	showgroupbutton.onclick = function(){showGroup(name, tabs)};
-	showgroupbutton.innerHTML = "Show";
+	showgroupbutton.src = "/assets/icons/expand_more.png";
 }
 
 function cancelGroup(){
