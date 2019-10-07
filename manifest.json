@@ -21,5 +21,6 @@
     "permissions": [
           "storage",
           "tabs"
-        ]
+        ],
+    "content_security_policy": "script-src 'self' https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js; object-src 'self'"
   }

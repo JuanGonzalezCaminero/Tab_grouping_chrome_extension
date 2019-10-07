@@ -1,12 +1,75 @@
+
 .groupheader{
 	height: 50px;
-}
-
-.groupbutton{
-	height: 40px;
-	padding: 5px;
+	font-family: Roboto,sans-serif;
+	font-size: 18pt;
+	align-items: center;
 }
 
 .groupcontrols{
 	margin-left: auto;
 }
+
+.groupname{
+}
+
+.groupbutton{
+	/*
+	height: 20px;
+	padding: 15px;
+	*/
+}
+
+.groupicon{
+	color: black;
+}
+
+.groupbutton:hover{
+	background-color: lightgrey;
+}
+
+#newgroup{
+	margin-left: auto;
+	margin-right: 3.5%;
+	background-color: orange;
+}
+
+#groupname_div{
+	height: 30px;
+}
+
+#groupname{
+	width: 180px;
+	height: 30px;
+}
+
+#savegroup{
+}
+
+#cancelgroup{
+}
+
+#savegroupicon{
+	color: black;
+}
+
+#cancelgroupicon{
+	color: black;
+}
+
+/*
+.groupshow{
+	height: 40px;
+	padding: 5px;
+}
+
+.grouparrow{
+	height: 30px;
+	padding: 10px;
+}
+
+.groupcross{
+	height: 30px;
+	padding: 10px;
+}
+*/

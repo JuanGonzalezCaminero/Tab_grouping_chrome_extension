@@ -1,4 +1,37 @@
 //callbacks for the controls in the extension and code to be run when the extension is clicked on
+//import {MDCRipple} from '@material/ripple';
+
+//const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'));
+
+const listCheckbox = `<span class="mdc-list-item__graphic">
+      <div class="mdc-checkbox">
+        <input type="checkbox"
+                class="mdc-checkbox__native-control"
+                id="tab_checkbox"/>
+        <div class="mdc-checkbox__background">
+          <svg class="mdc-checkbox__checkmark"
+                viewBox="0 0 24 24">
+            <path class="mdc-checkbox__checkmark-path"
+                  fill="none"
+                  d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+          </svg>
+          <div class="mdc-checkbox__mixedmark"></div>
+        </div>
+      </div>
+    </span>`;
+
+const moreIcon = `<i class="material-icons groupicon">
+				expand_more
+				</i>`;
+const lessIcon = `<i class="material-icons groupicon">
+				expand_less
+				</i>`;
+const openIcon = `<i class="material-icons groupicon">
+				open_in_browser
+				</i>`;
+const deleteIcon = `<i class="material-icons groupicon">
+					delete
+					</i>`;
 
 class Tab {
 	constructor(title, url, iconurl) {
@@ -48,17 +81,19 @@ function buildGroupsList(){
 	//Load saved groups and build a list
 	chrome.storage.sync.get('groups', function(result) {
 		var groups_list = document.getElementById("groups_list");
+		
 		result.groups.forEach(function(element){
 			//This element will act as a header, holding the group name and
 			//controls
 			var newnode  = document.createElement("li");
 			var groupname = document.createElement("p");
 			var controlsdiv = document.createElement("div");
-			var showgroupbutton = document.createElement("input");
-			var launchgroupbutton = document.createElement("input");
-			var deletegroupbutton = document.createElement("input");
+			var showgroupbutton = document.createElement("button");
+			var launchgroupbutton = document.createElement("button");
+			var deletegroupbutton = document.createElement("button");
 
 			groupname.innerHTML = element.name;
+			groupname.classList.add("groupname");
 
 			newnode.style.display = "flex";
 			//1/3 means it will take columns 1 and 2
@@ -72,25 +107,29 @@ function buildGroupsList(){
 			deletegroupbutton.style.gridColumn = 5;
 			deletegroupbutton.style.gridRow = 1;
 			*/
+			/*
 			showgroupbutton.type = "image";
 			launchgroupbutton.type = "image";
 			deletegroupbutton.type = "image";
 
-			showgroupbutton.src = "/assets/icons/expand_more.png";
-			launchgroupbutton.src = "/assets/icons/arrow_upward.png";
-			deletegroupbutton.src = "/assets/icons/clear.png";
+			showgroupbutton.src = "/assets/icons/expand_more_fit.png";
+			launchgroupbutton.src = "/assets/icons/arrow_upward_fit.png";
+			deletegroupbutton.src = "/assets/icons/clear_fit.png";
 
+			*/
 			showgroupbutton.classList.add("groupbutton");
 			launchgroupbutton.classList.add("groupbutton");
 			deletegroupbutton.classList.add("groupbutton");
 
+			showgroupbutton.classList.add("mdc-button");
+			launchgroupbutton.classList.add("mdc-button");
+			deletegroupbutton.classList.add("mdc-button");
+
 			showgroupbutton.id = "groupshow_" + element.name;
-			
-			//showgroupbutton.value = "Show";
 
-			//launchgroupbutton.value = "Open";
-
-			//deletegroupbutton.value = "Delete";
+			showgroupbutton.innerHTML = moreIcon;
+			launchgroupbutton.innerHTML = openIcon;
+			deletegroupbutton.innerHTML = deleteIcon;
 
 			controlsdiv.appendChild(showgroupbutton);
 			controlsdiv.appendChild(launchgroupbutton);
@@ -192,7 +231,7 @@ function showGroup(name, tabs){
 	//Change the handler associated to the button, so the next press closes the group
 	showgroupbutton = document.getElementById("groupshow_" + name);
 	showgroupbutton.onclick = function(){hideGroup(name, tabs)};
-	showgroupbutton.src = "/assets/icons/expand_less.png";
+	showgroupbutton.src = "/assets/icons/expand_less_fit.png";
 }
 
 function hideGroup(name, tabs){
@@ -204,12 +243,12 @@ function hideGroup(name, tabs){
 	//Change the handler associated to the button, so the next press shows the group
 	showgroupbutton = document.getElementById("groupshow_" + name);
 	showgroupbutton.onclick = function(){showGroup(name, tabs)};
-	showgroupbutton.src = "/assets/icons/expand_more.png";
+	showgroupbutton.src = "/assets/icons/expand_more_fit.png";
 }
 
 function cancelGroup(){
 	var tabs_list = document.getElementById("tabs_list");
-	document.getElementById("groupcreation").style.display="none";
+	document.getElementById("groupcreationcontrols").style.display="none";
 
 	//Remove all elements from the list
 	while( tabs_list.firstChild ){
@@ -223,6 +262,9 @@ function cancelGroup(){
 	//Empty the text input for the group name
 	var groupname = document.getElementById("groupname");
 	groupname.value = "";
+
+	//Animate the FAB into view
+	document.getElementById("newgroup").classList.remove("mdc-fab--exited");
 
 }
 
@@ -275,7 +317,9 @@ function saveGroup(){
 }
 
 function openCreateGroup(){
-	document.getElementById("groupcreation").style.display="block";
+	document.getElementById("groupcreationcontrols").style.display="block";
+	//Animate the FAB out of view
+	document.getElementById("newgroup").classList.add("mdc-fab--exited");
 	//This function returns an array of windows. Each window contains an array of tabs
 	chrome.windows.getAll({"populate" : true}, fillTabsList);
 }
@@ -289,25 +333,34 @@ function fillTabsList(windowsArray){
 	});
 	tabsArray.forEach(function(element){
 		var newnode  = document.createElement("li");
-		var tabinfo = document.createElement("div");
+		//var tabinfo = document.createElement("div");
 		var tabimg = document.createElement("img");
-		var tabtitle = document.createElement("p");
+		var tabtitle = document.createElement("span");
 
-		tabinfo.style.display = "flex";
+		//tabinfo.style.display = "flex";
 
 		tabimg.style.width = "32px";
 		tabimg.style.height = "32px";
 		tabimg.style.marginRight = "10px";
 		tabimg.src = element.favIconUrl;
 		
-
-		tabtitle.innerHTML = element.title;
+		//If an item is too long, remove the trailing and add "..." at the end
+		if(element.title.length > 30){
+			tabtitle.innerHTML = element.title.slice(0, 30) + "...";
+		}else{
+			tabtitle.innerHTML = element.title;
+		}
 		tabtitle.style.userSelect = "none";
+		tabtitle.classList.add("mdc-list-item__text");
 
-		tabinfo.appendChild(tabimg);
-		tabinfo.appendChild(tabtitle);
+		//tabinfo.appendChild(tabimg);
+		//tabinfo.appendChild(tabtitle);
 
-		newnode.appendChild(tabinfo);
+
+		newnode.innerHTML = listCheckbox;
+		//newnode.appendChild(tabinfo);
+		newnode.appendChild(tabimg);
+		newnode.appendChild(tabtitle);
 
 		//Store necessary information
 		newnode.setAttribute("data-url", element.url);
@@ -320,17 +373,30 @@ function fillTabsList(windowsArray){
 
 		newnode.style.padding="2%";
 
+		newnode.classList.add("mdc-list-item");
+
 		tabs_list.appendChild(newnode);
 	});
 }
 
 function tabSelected(tab){
 	//alert(tab.dataset.title);
+	tabCheckbox = tab.getElementsByTagName("input")[0];
 	if(tab.dataset.selected == "0"){
-		tab.style.backgroundColor="lightblue";
+		//tab.style.backgroundColor="lightgrey";
 		tab.dataset.selected = "1";
+		tabCheckbox.checked = true;
 	}else{
-		tab.style.backgroundColor="white";
+		//tab.style.backgroundColor="white";
 		tab.dataset.selected = "0";
+		tabCheckbox.checked = false;
 	}
+	
+	/*
+	if(tabCheckbox.checked){
+		tabCheckbox.checked = false;
+	}else{
+		tabCheckbox.checked = true;
+	}
+	*/
 }
