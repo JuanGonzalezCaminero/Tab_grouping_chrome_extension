@@ -86,7 +86,7 @@ function buildGroupsList(){
 			//This element will act as a header, holding the group name and
 			//controls
 			var newnode  = document.createElement("li");
-			var groupname = document.createElement("p");
+			var groupname = document.createElement("span");
 			var controlsdiv = document.createElement("div");
 			var showgroupbutton = document.createElement("button");
 			var launchgroupbutton = document.createElement("button");
@@ -94,6 +94,7 @@ function buildGroupsList(){
 
 			groupname.innerHTML = element.name;
 			groupname.classList.add("groupname");
+			groupname.classList.add("mdc-list-item__text");
 
 			newnode.style.display = "flex";
 			//1/3 means it will take columns 1 and 2
@@ -147,6 +148,7 @@ function buildGroupsList(){
 			deletegroupbutton.onclick = function(){deleteGroup(element.name)};
 
 			newnode.classList.add("groupheader");
+			newnode.classList.add("mdc-list-item");
 
 			groups_list.appendChild(newnode);
 
@@ -197,13 +199,15 @@ function showGroup(name, tabs){
 	console.log(tabs);
 	var groupcontents  = document.createElement("ul");
 	groupcontents.style.listStyleType="none"
+	groupcontents.classList.add("mdc-list-item__text");
+
 	tabs.forEach(function(element){
 		var newnode  = document.createElement("li");
-		var tabinfo = document.createElement("div");
+		//var tabinfo = document.createElement("div");
 		var tabimg = document.createElement("img");
-		var tabtitle = document.createElement("p");
+		var tabtitle = document.createElement("span");
 
-		tabinfo.style.display = "flex";
+		//tabinfo.style.display = "flex";
 
 		tabimg.style.width = "32px";
 		tabimg.style.height = "32px";
@@ -213,16 +217,18 @@ function showGroup(name, tabs){
 
 		tabtitle.innerHTML = element.title;
 		tabtitle.style.userSelect = "none";
+		tabtitle.classList.add("mdc-list-item__text");
 
-		tabinfo.appendChild(tabimg);
-		tabinfo.appendChild(tabtitle);
+		newnode.appendChild(tabimg);
+		newnode.appendChild(tabtitle);
 
-		newnode.appendChild(tabinfo);
+		//newnode.appendChild(tabinfo);
 
 		//add a handler for when the tab is clicked on
 		//newnode.onclick = function(){tabSelected(newnode);}
 
 		newnode.style.padding="2%";
+		newnode.classList.add("mdc-list-item");
 
 		groupcontents.appendChild(newnode);
 	});
@@ -231,7 +237,7 @@ function showGroup(name, tabs){
 	//Change the handler associated to the button, so the next press closes the group
 	showgroupbutton = document.getElementById("groupshow_" + name);
 	showgroupbutton.onclick = function(){hideGroup(name, tabs)};
-	showgroupbutton.src = "/assets/icons/expand_less_fit.png";
+	showgroupbutton.innerHTML = lessIcon;
 }
 
 function hideGroup(name, tabs){
@@ -243,7 +249,7 @@ function hideGroup(name, tabs){
 	//Change the handler associated to the button, so the next press shows the group
 	showgroupbutton = document.getElementById("groupshow_" + name);
 	showgroupbutton.onclick = function(){showGroup(name, tabs)};
-	showgroupbutton.src = "/assets/icons/expand_more_fit.png";
+	showgroupbutton.innerHTML = moreIcon;
 }
 
 function cancelGroup(){

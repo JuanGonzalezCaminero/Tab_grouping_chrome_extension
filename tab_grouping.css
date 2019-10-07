@@ -1,16 +1,32 @@
+/*Button mixins*/
+mdc-button-container-fill-color($color: grey)
+mdc-button-icon-color($color: green)
+
+/*
+button{
+	--mdc-theme-primary: black;
+	--mdc-theme-secondary: black;
+	--mdc-theme-surface: black;
+	--mdc-theme-background: black;
+}
+*/
 
 .groupheader{
 	height: 50px;
-	font-family: Roboto,sans-serif;
+	/*font-family: Roboto,sans-serif;
 	font-size: 18pt;
-	align-items: center;
+	align-items: center;*/
+	font-weight: bold;
 }
 
 .groupcontrols{
+	--mdc-theme-primary: grey;
 	margin-left: auto;
 }
 
 .groupname{
+	/*font-size: 12pt;*/
+	font-weight: bold;
 }
 
 .groupbutton{
@@ -18,6 +34,7 @@
 	height: 20px;
 	padding: 15px;
 	*/
+	background-color: black;
 }
 
 .groupicon{
@@ -44,9 +61,11 @@
 }
 
 #savegroup{
+	--mdc-theme-primary: grey;
 }
 
 #cancelgroup{
+	--mdc-theme-primary: grey;
 }
 
 #savegroupicon{
