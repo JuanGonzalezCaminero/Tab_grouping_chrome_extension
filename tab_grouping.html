@@ -10,46 +10,66 @@
 	  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
 </head>
-<body style="/*min-width: 300px*/ width: 400px;">
 
-	<ul id="groups_list" class="mdc-list" style="list-style-type: none;"></ul>
-	
-	<div id="groupcreation">
-		<div id="groupcreationheader" style="display:flex; align-items: center;" width="100%">
-			<div id="groupcreationcontrols" style="display:none">
-				<div class="mdc-text-field mdc-text-field--no-label" id="groupname_div">
-					<input type="text" id="groupname" placeholder="Group name" class="mdc-text-field__input">
-					<!--<label class="mdc-floating-label" for="groupname">Group name</label>-->
-					<div class="mdc-line-ripple"></div>
-				</div>
-				<button id="savegroup" class="mdc-button">
-					<i class="material-icons" id="savegroupicon">
-					save_alt
-					</i>
-				</button>
-				<button id="cancelgroup" class="mdc-button">
-					<i class="material-icons" id="cancelgroupicon">
-					cancel
-					</i>
-				</button>
-				<!--
-				<input type="button" id="savegroup" value="Save group">
-				<input type="button" id="cancelgroup" value="Cancel"> class="mdc-button"
-				-->
-			</div>
-			<button id="newgroup" style="/*width: 100px*/" class="mdc-fab">
+
+<body>
+	<div style="height: 56px;">
+		<header id="header" class="mdc-top-app-bar mdc-top-app-bar--fixed">
+	  <div id="headerdiv" class="mdc-top-app-bar__row">
+	    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+	      <span id="headertext" class="mdc-top-app-bar__title">Saved Groups</span>
+	      <button id="newgroup" class="mdc-fab mdc-fab--mini">
 			  <i class="material-icons">
 			  	add
 			  </i>
-			</button>
-		</div>
-		<p id="groupnamealert" style="color:red; display:none"></p>
-		<ul id="tabs_list" class="mdc-list" role="group" aria-label="List with checkbox items" style="list-style-type: none;"></ul>
-	</div>
-	<div>
-		
+		</button>
+	    </section>
+	  </div>
+	</header>
 	</div>
 	
+	<!--
+	<div id="header" style="display:flex; align-items: center;" width="100%">
+		<p>
+			Saved Groups
+		</p>
+		<button id="newgroup" style="/*width: 100px*/" class="mdc-fab">
+		  <i class="material-icons">
+		  	add
+		  </i>
+		</button>
+	</div>
+	-->
+
+	<ul id="groups_list" class="mdc-list"></ul>
+	
+	
+
+	<ul id="tabs_list" class="mdc-list" role="group" aria-label="List with checkbox items" style="list-style-type: none;"></ul>
+
+	<div id="groupcreationcontrols" style="display:none;">
+		<div id="groupcreationcontrolstext">
+			<div class="mdc-text-field mdc-text-field--no-label" id="groupname_div">
+				<input type="text" id="groupname" placeholder="Group name" class="mdc-text-field__input">
+				<div class="mdc-line-ripple"></div>
+			</div>
+			<p id="groupnamealert" style="color:red; display:none"></p>
+		</div>
+		
+		<div id="groupcreationcontrolsbuttons">
+			<button id="savegroup" class="mdc-button">
+				<i class="material-icons" id="savegroupicon">
+				save_alt
+				</i>
+			</button>
+			<button id="cancelgroup" class="mdc-button">
+				<i class="material-icons" id="cancelgroupicon">
+				clear
+				</i>
+			</button>
+		</div>
+		<br>
+	</div>
 
 	<!--This script assigns the handlers for the controls, and needs to be loaded at the end
 	so the control elements exist when it searches for them-->

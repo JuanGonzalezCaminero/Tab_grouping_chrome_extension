@@ -32,6 +32,9 @@ const openIcon = `<i class="material-icons groupicon">
 const deleteIcon = `<i class="material-icons groupicon">
 					delete
 					</i>`;
+const cancelIcon = `<i class="material-icons groupicon">
+					remove
+					</i>`
 
 class Tab {
 	constructor(title, url, iconurl) {
@@ -77,9 +80,24 @@ cancelgroup.onclick = cancelGroup;
 
 buildGroupsList();
 
+/*
+document.getElementsByTagName("body")[0].onresize = tweakWidthForScrollbar;
+
+function tweakWidthForScrollbar() {
+  var db = document.body;
+  var scrollBarWidth = db.scrollHeight > db.clientHeight ?
+      db.clientWidth - db.offsetWidth : 0;
+
+  console.log(scrollBarWidth);
+
+  db.style.paddingRight = scrollBarWidth + "px";
+}
+*/
+
 function buildGroupsList(){
 	//Load saved groups and build a list
 	chrome.storage.sync.get('groups', function(result) {
+
 		var groups_list = document.getElementById("groups_list");
 		
 		result.groups.forEach(function(element){
@@ -150,6 +168,8 @@ function buildGroupsList(){
 			newnode.classList.add("groupheader");
 			newnode.classList.add("mdc-list-item");
 
+			newnode.id = "group_header_" + element.name;
+
 			groups_list.appendChild(newnode);
 
 			//This element will be used to insert the group tabs when the show group 
@@ -196,7 +216,6 @@ function launchGroup(tabs){
 }
 
 function showGroup(name, tabs){
-	console.log(tabs);
 	var groupcontents  = document.createElement("ul");
 	groupcontents.style.listStyleType="none"
 	groupcontents.classList.add("mdc-list-item__text");
@@ -206,6 +225,7 @@ function showGroup(name, tabs){
 		//var tabinfo = document.createElement("div");
 		var tabimg = document.createElement("img");
 		var tabtitle = document.createElement("span");
+		var deleteButton = document.createElement("button");
 
 		//tabinfo.style.display = "flex";
 
@@ -219,18 +239,27 @@ function showGroup(name, tabs){
 		tabtitle.style.userSelect = "none";
 		tabtitle.classList.add("mdc-list-item__text");
 
+		deleteButton.classList.add("tab_delete_button");
+		deleteButton.classList.add("mdc-button");
+		deleteButton.classList.add("groupbutton");
+		deleteButton.innerHTML = cancelIcon;
+		deleteButton.onclick = function(){removeTab(name, element.url, newnode, tabs)};
+
 		newnode.appendChild(tabimg);
 		newnode.appendChild(tabtitle);
+		newnode.appendChild(deleteButton);
 
 		//newnode.appendChild(tabinfo);
 
 		//add a handler for when the tab is clicked on
 		//newnode.onclick = function(){tabSelected(newnode);}
 
+		newnode.setAttribute("data-url", element.url);
 		newnode.style.padding="2%";
 		newnode.classList.add("mdc-list-item");
 
 		groupcontents.appendChild(newnode);
+
 	});
 	document.getElementById("group_" + name).appendChild(groupcontents);
 
@@ -238,6 +267,51 @@ function showGroup(name, tabs){
 	showgroupbutton = document.getElementById("groupshow_" + name);
 	showgroupbutton.onclick = function(){hideGroup(name, tabs)};
 	showgroupbutton.innerHTML = lessIcon;
+}
+
+function removeTab(name, url, listitem, tabs){
+	//Remove the tab from the group and update the synced storage,
+	//remove the list item. 
+
+	listitem.remove();
+	
+	chrome.storage.sync.get('groups', function(result) {
+      result.groups
+      var group_index=0;
+
+      for(let i=0; i<result.groups.length; i++){
+      	if(result.groups[i].name == name){
+      		group_index = i;
+      		break;
+      	}
+      }
+
+      //This will remove the first entry if there are duplicated elements
+      for(let i=0; i<result.groups[group_index].tabs.length; i++){
+      	if(result.groups[group_index].tabs[i].url == url){
+      		result.groups[group_index].tabs.splice(i,1);
+      		break;
+      	}
+      }
+      
+      chrome.storage.sync.set({groups: result.groups});
+    });
+
+	var tabs_index = 0;
+    for(let i=0; i<tabs.length; i++){
+      	if(tabs[i].url == url){
+      		tabs_index = i;
+      		break;
+      	}
+      }
+
+    tabs.splice(tabs_index, 1);
+
+    var parent = document.getElementById("group_header_" + name);
+    parent.getElementsByTagName("button")[0].onclick = function(){hideGroup(name, tabs)};
+
+    //listitem.parentElement.tabs.splice(tab_index, 1);
+
 }
 
 function hideGroup(name, tabs){
@@ -268,6 +342,9 @@ function cancelGroup(){
 	//Empty the text input for the group name
 	var groupname = document.getElementById("groupname");
 	groupname.value = "";
+
+	//Show the groups list
+	document.getElementById("groups_list").style.display="block";
 
 	//Animate the FAB into view
 	document.getElementById("newgroup").classList.remove("mdc-fab--exited");
@@ -323,9 +400,17 @@ function saveGroup(){
 }
 
 function openCreateGroup(){
-	document.getElementById("groupcreationcontrols").style.display="block";
+	document.getElementById("groupcreationcontrols").style.display="flex";
 	//Animate the FAB out of view
 	document.getElementById("newgroup").classList.add("mdc-fab--exited");
+
+	//Hide the groups list
+	document.getElementById("groups_list").style.display="none";
+
+	//Change the header
+	document.getElementById("headertext").innerHTML="Group Creation";
+
+	//document.getElementById("groupcreation").style.height=0;
 	//This function returns an array of windows. Each window contains an array of tabs
 	chrome.windows.getAll({"populate" : true}, fillTabsList);
 }
@@ -380,6 +465,7 @@ function fillTabsList(windowsArray){
 		newnode.style.padding="2%";
 
 		newnode.classList.add("mdc-list-item");
+		newnode.classList.add("mdc-ripple-surface");
 
 		tabs_list.appendChild(newnode);
 	});

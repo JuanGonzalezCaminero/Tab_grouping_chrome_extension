@@ -1,7 +1,3 @@
-/*Button mixins*/
-mdc-button-container-fill-color($color: grey)
-mdc-button-icon-color($color: green)
-
 /*
 button{
 	--mdc-theme-primary: black;
@@ -10,6 +6,14 @@ button{
 	--mdc-theme-background: black;
 }
 */
+
+body::-webkit-scrollbar { width: 0 !important }
+body{
+	overflow: hidden;
+	width: 400px;
+	min-height: 56px;
+	margin: 0px;
+}
 
 .groupheader{
 	height: 50px;
@@ -34,7 +38,7 @@ button{
 	height: 20px;
 	padding: 15px;
 	*/
-	background-color: black;
+	--mdc-theme-primary: grey;
 }
 
 .groupicon{
@@ -42,22 +46,69 @@ button{
 }
 
 .groupbutton:hover{
-	background-color: lightgrey;
+	/*background-color: lightgrey;*/
+}
+
+.tab_delete_button{
+	margin-left: auto;
+}
+
+
+#header{
+	background-color: green;
+	height: 56px;
+}
+
+#headerdiv{
+	/*height: 100px;*/
+}
+
+
+#groupcreationcontrolsbuttons{
+	margin-left: auto;
+	display: flex;
+	padding-left: 2%;
+}
+
+#groupcreationcontrols{
+	/*width: 100%;*/
+	background-color: white;
+	align-items: center;
+	/*opacity: 0.975;*/
+
+	padding: 5%;
+
+	height: 35px;
+
+	position: fixed; 
+	bottom: 0
+}
+
+#groupnamealert{
+	font-family: Roboto,sans-serif;
+	position: relative; 
+	bottom: 25%;
+	left: 0;
 }
 
 #newgroup{
 	margin-left: auto;
 	margin-right: 3.5%;
-	background-color: orange;
+	background-color: #003000;
+}
+
+#groupcreationcontrolstext{
+	height: 100%;
 }
 
 #groupname_div{
-	height: 30px;
+	/*height: 30px;*/
+	height: 100%;
 }
 
 #groupname{
-	width: 180px;
-	height: 30px;
+	width: 100%;
+	/*height: 30px;*/
 }
 
 #savegroup{
@@ -76,19 +127,3 @@ button{
 	color: black;
 }
 
-/*
-.groupshow{
-	height: 40px;
-	padding: 5px;
-}
-
-.grouparrow{
-	height: 30px;
-	padding: 10px;
-}
-
-.groupcross{
-	height: 30px;
-	padding: 10px;
-}
-*/
