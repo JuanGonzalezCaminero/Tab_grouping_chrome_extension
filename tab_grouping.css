@@ -70,13 +70,17 @@ body{
 	padding-left: 2%;
 }
 
+#groupcreationfooter{
+	height: 75px;
+}
+
 #groupcreationcontrols{
 	/*width: 100%;*/
 	background-color: white;
 	align-items: center;
 	/*opacity: 0.975;*/
 
-	padding: 5%;
+	padding: 20px;
 
 	height: 35px;
 

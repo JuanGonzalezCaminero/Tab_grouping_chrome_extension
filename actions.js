@@ -33,7 +33,7 @@ const deleteIcon = `<i class="material-icons groupicon">
 					delete
 					</i>`;
 const cancelIcon = `<i class="material-icons groupicon">
-					remove
+					clear
 					</i>`
 
 class Tab {
@@ -329,6 +329,7 @@ function hideGroup(name, tabs){
 function cancelGroup(){
 	var tabs_list = document.getElementById("tabs_list");
 	document.getElementById("groupcreationcontrols").style.display="none";
+	document.getElementById("groupcreationfooter").style.display="none";
 
 	//Remove all elements from the list
 	while( tabs_list.firstChild ){
@@ -342,6 +343,9 @@ function cancelGroup(){
 	//Empty the text input for the group name
 	var groupname = document.getElementById("groupname");
 	groupname.value = "";
+
+	//Change the header
+	document.getElementById("headertext").innerHTML="Saved Groups";
 
 	//Show the groups list
 	document.getElementById("groups_list").style.display="block";
@@ -401,6 +405,10 @@ function saveGroup(){
 
 function openCreateGroup(){
 	document.getElementById("groupcreationcontrols").style.display="flex";
+	//The footer is needed if there are few tabs so the last one doesn't end
+	//up under the controls, that are fized to the bottom
+	document.getElementById("groupcreationfooter").style.display="block";
+	
 	//Animate the FAB out of view
 	document.getElementById("newgroup").classList.add("mdc-fab--exited");
 
